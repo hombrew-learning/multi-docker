@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing Serverless...
+      - npm install -g serverless@1.78.1 lerna@3.22.1
+  pre_build:
+    commands:
+      - docker build -t hombrew/reat-test -f ./client/Dockerfile.dev ./client
+      - docker run -e CI=true hombrew/reat-test npm run test -- --coverage
+  build:
+    commands:
+      - docker build -t hombrew/multi-client ./client
+      - docker build -t hombrew/multi-nginx ./nginx
+      - docker build -t hombrew/multi-server ./server
+      - docker build -t hombrew/multi-worker ./worker
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+      - docker push hombrew/multi-client
+      - docker push hombrew/multi-nginx
+      - docker push hombrew/multi-server
+      - docker push hombrew/multi-worker
+
+  post_build:
+    commands:
+      - echo Deployment completed on `date`
