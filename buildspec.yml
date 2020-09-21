@@ -5,6 +5,7 @@ phases:
     commands:
       - docker build -t hombrew/reat-test -f ./client/Dockerfile.dev ./client
       - docker run -e CI=true hombrew/reat-test npm run test -- --coverage
+
   build:
     commands:
       - docker build -t hombrew/multi-client ./client
