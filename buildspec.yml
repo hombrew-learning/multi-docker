@@ -1,10 +1,6 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      - echo Installing Serverless...
-      - npm install -g serverless@1.78.1 lerna@3.22.1
   pre_build:
     commands:
       - docker build -t hombrew/reat-test -f ./client/Dockerfile.dev ./client
